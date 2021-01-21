@@ -1,0 +1,5 @@
+frontend/node_modules
+dist
+frontend/dist
+backend/node_modules
+node_modules/
