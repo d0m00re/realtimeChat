@@ -8,7 +8,7 @@ import socketIOClient from "socket.io-client";
 
 import {useDispatch, useReducer} from 'react-redux';
 
-import {send} from './../../redux/actions/TestMw';
+import {send} from './../../redux/actions/ChatV2';
 
 //const ENDPOINT = "http://127.0.0.1:4242";
 
@@ -20,7 +20,11 @@ const Chat = () => {
 
     const [roomName, setRoomName] = useState('');
 
-    useEffect(() => {
+    
+    //});
+//    socket.on('miaou', 'john');
+
+  //  useEffect(() => {
 //
 /*        const socket = socketIOClient(ENDPOINT);
 
@@ -49,7 +53,7 @@ const Chat = () => {
 
         setSocketIO(socket);
   */
-      }, []);
+  //    }, []);
 
     const handleMsg = (e) => {
       setMsg(e.target.value);
@@ -75,11 +79,12 @@ const Chat = () => {
 
     const mdTest = () => {
       console.log('go go go')
-      dispatch(send('miaou', 'hello world'));
+      dispatch(send('SendMessage', 'hello world'));
     }
 
     return (
         <div>
+          {/*}
             <MsgList  msgList={msgList}/>
 
             <Textfield
@@ -96,6 +101,7 @@ const Chat = () => {
             <Button onClick={joinRoom}>JOIN ROOM</Button>
 
             <div></div>
+    */}
             <Button onClick={() => mdTest()}>
               SEND SOCKET MIDDLEWARE
             </Button>

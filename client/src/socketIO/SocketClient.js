@@ -12,6 +12,8 @@ export default class socketAPI {
         console.log('connect error');
         console.log(err);
       })
+
+    //  this.on('message', 'coucou toi');
   }
 
   connect() {
@@ -47,6 +49,9 @@ export default class socketAPI {
   }
 
   on(event, fun) {
+    console.log('fun fun fun');
+    console.log(event);
+    console.log(fun);
     // No promise is needed here, but we're expecting one in the middleware.
     return new Promise((resolve, reject) => {
       if (!this.socket) return reject("No socket connection.");

@@ -14,3 +14,5 @@ export const POST_MSG = "SEND";
 export const SEND = 'redux/message/SEND';
 export const SEND_SUCCESS = 'redux/message/SEND_SUCCESS';
 export const SEND_FAIL = 'redux/message/SEND_FAIL';
+
+export const RECEIVE = 'redux/message/RECEIVE';

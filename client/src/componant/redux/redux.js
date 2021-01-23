@@ -1,5 +1,5 @@
 import SocketClient from './../../../src/socketIO/SocketClient';
-import SocketIOReducer from './reducers/socketio';
+import SocketIOReducer from './reducers/ChatV2';
 
 import {
   applyMiddleware,
@@ -20,6 +20,15 @@ import socketMiddleware from './middleware/socketMiddleware';
   });
   
   const socketClient = new SocketClient();
+
+  socketClient.on('SendMessage', msg => {console.log(msg)});
+
+  /*
+  (socketClient) => client.on('SendMessage', (data) => {
+    console.log('coucou');
+    console.log(data);
+*/
+
 
   // store.js
   

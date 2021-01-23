@@ -55,7 +55,8 @@ io.on("connection", function(socket: any) {
   socket.on('SendMessage', function(message : any) {
     console.log('receive an important message:');
     console.log(message);
-    
+    socket.broadcast.emit('allMessage', message);
+
     
   })
 
