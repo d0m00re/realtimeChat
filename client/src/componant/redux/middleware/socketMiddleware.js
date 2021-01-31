@@ -7,9 +7,8 @@ export default function socketMiddleware(socket) {
 // next c est une va etre call depuis l exterieur avec une fonction definis
 // action ????
   return ({ dispatch, getState }) => (next) => (action) => {
-    // action est une function
     console.log('socket io middleware');
-    if (typeof action === "function") {
+    if (typeof action === "function") { 
         console.log('it s a function dude!');
       return action(dispatch, getState);
     }
@@ -31,10 +30,11 @@ export default function socketMiddleware(socket) {
 
     const [REQUEST, SUCCESS, FAILURE] = types;
 
-    console.log({ ...rest, type: REQUEST });
+     
+     // why next??????
     next({ ...rest, type: REQUEST });
-    console.log('socket ; ');
-    console.log(socket);
+ 
+    
     return promise(socket)
       .then((result) => {
         return next({ ...rest, result, type: SUCCESS });

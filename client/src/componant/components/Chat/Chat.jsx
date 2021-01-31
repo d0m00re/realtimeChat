@@ -6,105 +6,89 @@ import MsgList from './MsgList';
 
 import socketIOClient from "socket.io-client";
 
-import {useDispatch, useReducer} from 'react-redux';
+import {useDispatch, useReducer} from 'react-redux'; 
 
-import {send} from './../../redux/actions/ChatV2';
+import {connect, joinRoom, sendMsg, receive, send} from './../../redux/actions/ChatV2';
 
 //const ENDPOINT = "http://127.0.0.1:4242";
 
 const Chat = () => {
 //    const [socketIO, setSocketIO] = useState();
-    const [msg, setMsg] = useState('');
-    const [msgList, setMsgList] = useState([]);
+//    const [msg, setMsg] = useState('');
+//    const [msgList, setMsgList] = useState([]);
     const dispatch = useDispatch();
 
-    const [roomName, setRoomName] = useState('');
+    const [generalInfo, setGeneralInfo] = useState({
+      msg : 'test',
+      username : 'miaou',
+      roomname: 'room1'
+    });
 
-    
-    //});
-//    socket.on('miaou', 'john');
+/*
+    send --> {type : 'socket'}
+*/
+const connectSocketIO = async() => {
+  console.log('connect : ');
+  
+  await dispatch(connect());
+  await dispatch(send('sendNickname', generalInfo.username));
+  //await dispatch(receive('msgFromUser'));
+  receive('msgFromUser');
+}
+ 
 
-  //  useEffect(() => {
-//
-/*        const socket = socketIOClient(ENDPOINT);
-
-        socket.on('connect', () => {
-            // either with send()
-            socket.send('Hello!');          
-          });
-
-        
-          
-          // handle the event sent with socket.send()
-          socket.on('message', data => {
-            console.log(data);
-          });
-          
-          // handle the event sent with socket.emit()
-          socket.on('greetings', (elem1, elem2, elem3) => {
-            console.log(elem1, elem2, elem3);
-          });
-
-          socket.on('allMessage', (msg) => {
-            console.log('msg receive : ');
-            console.log(msg);
-            setMsgList((old) => [...old, msg]);
-          });
-
-        setSocketIO(socket);
-  */
-  //    }, []);
-
-    const handleMsg = (e) => {
-      setMsg(e.target.value);
+// go send message
+    const goSendMsg = async () => {
+      console.log('send msg : ' + generalInfo.msg);
+      dispatch(sendMsg(generalInfo.msg));
     }
 
-    const submitMsg = () => {
-      socketIO.emit("message", msg);
-      setMsgList((old) => [...old, msg]);
-      setMsg('');
+    const goJoinRoom = async () => {
+      console.log('join room : ' + generalInfo.roomname);
+
+      dispatch(joinRoom(generalInfo.roomname));
     }
 
-    const joinRoom = () => {
-      console.log('go join a room : ' + roomName);
-      //socketIO.(roomName);
-      socketIO.emit('join room', roomName);
-      //socket.to(roomName).emit('mon gros chibre');
+
+    const handleInfo = async (e, key) => {
+      setGeneralInfo(old => ({
+        ...generalInfo,
+        [key] : e.target.value
+      }))
     }
 
-    const sendMsgToRoom = (msg) => {
-      console.log(`${roomName})${msg}`);
-      socketIO.emit('message', 'fuck');
-    }
-
-    const mdTest = () => {
-      console.log('go go go')
-      dispatch(send('SendMessage', 'hello world'));
-    }
 
     return (
         <div>
-          {/*}
-            <MsgList  msgList={msgList}/>
-
-            <Textfield
-              value = {msg}
-              onChange = {handleMsg}
-            />
-            <Button onClick={() => sendMsgToRoom(msg)}>
-              SEND MSG
-              </Button>
-
-            
-
-            <Textfield value={roomName} onChange={(e) => setRoomName(e.target.value)}></Textfield>
-            <Button onClick={joinRoom}>JOIN ROOM</Button>
+ 
+            <Typography variant='h5'>
+              userName : 
+            </Typography>
+            <Textfield value={generalInfo.username} onChange={(e) => handleInfo(e, 'username')}></Textfield>
+            <Button onClick={connectSocketIO}>
+              CONNECT  
+            </Button>
 
             <div></div>
-    */}
-            <Button onClick={() => mdTest()}>
-              SEND SOCKET MIDDLEWARE
+
+            
+            <Typography variant='h5'>
+              roomname : 
+            </Typography>
+            <Textfield value={generalInfo.roomname} onChange={(e) => handleInfo(e, 'roomname')}></Textfield>
+            <Button onClick={goJoinRoom}>
+              JOIN
             </Button>
+            <div></div>
+
+            <Typography variant='h5'>
+              msg : 
+            </Typography>
+            <Textfield value={generalInfo.msg} onChange={(e) => handleInfo(e, 'msg')}></Textfield>
+            <Button onClick={goSendMsg}>
+              SEND
+            </Button>
+            <div></div>
         </div>
     )
 }

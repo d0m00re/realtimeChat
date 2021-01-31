@@ -15,4 +15,8 @@ export const SEND = 'redux/message/SEND';
 export const SEND_SUCCESS = 'redux/message/SEND_SUCCESS';
 export const SEND_FAIL = 'redux/message/SEND_FAIL';
 
+export const NEW_MESSAGE = 'redux/message/NEW_MESSAGE';
+
 export const RECEIVE = 'redux/message/RECEIVE';
+export const RECEIVE_SUCCESS = 'redux/message/RECEIVE_SUCCESS';
+export const RECEIVE_FAIL = 'redux/message/RECEIVE_FAIL';

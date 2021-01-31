@@ -7,16 +7,11 @@ const url = `${host}:${port}`;
 export default class socketAPI {
   constructor() {
       this.socket = undefined;
-      this.connect().then(res => console.log('I m connected!!!!'))
-      .catch(err => {
-        console.log('connect error');
-        console.log(err);
-      })
-
-    //  this.on('message', 'coucou toi');
   }
 
   connect() {
+    console.log('* CONNECT');
+    
     this.socket = io.connect(url);
     return new Promise((resolve, reject) => {
       this.socket.on("connect", () => resolve());
@@ -34,8 +29,7 @@ export default class socketAPI {
   }
 
   emit(event, data) {
-    console.log('miaouuuuuu');
-    return new Promise((resolve, reject) => {
+     return new Promise((resolve, reject) => {
       if (!this.socket) return reject("No socket connection.");
 
       return this.socket.emit(event, data, (response) => {
@@ -49,9 +43,7 @@ export default class socketAPI {
   }
 
   on(event, fun) {
-    console.log('fun fun fun');
-    console.log(event);
-    console.log(fun);
+ 
     // No promise is needed here, but we're expecting one in the middleware.
     return new Promise((resolve, reject) => {
       if (!this.socket) return reject("No socket connection.");
