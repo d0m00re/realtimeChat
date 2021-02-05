@@ -20,3 +20,6 @@ export const NEW_MESSAGE = 'redux/message/NEW_MESSAGE';
 export const RECEIVE = 'redux/message/RECEIVE';
 export const RECEIVE_SUCCESS = 'redux/message/RECEIVE_SUCCESS';
 export const RECEIVE_FAIL = 'redux/message/RECEIVE_FAIL';
+
+// v442
+export const SEND_MESSAGE = 'redux/socket/sendmessage'

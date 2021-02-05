@@ -1,5 +1,4 @@
-import SocketClient from './middleware/SocketClient'; //'./../../../src/socketIO/SocketClient';
-import SocketIOReducer from './reducers/ChatV2';
+import SocketClient from './middleware/socketMiddlewareV2'; //'./../../../src/socketIO/SocketClient';
 
 import {
   applyMiddleware,
@@ -7,28 +6,9 @@ import {
     createStore,
   } from 'redux';
 
-
-import GameReducer from './reducers/Game';
-import socketMiddleware from './middleware/socketMiddleware';
-import loggerMiddleware from './middleware/Logger';
-  //-------------------------------
+import ChatV2 from './reducers/ChatV2';
+   //-------------------------------
   // actions.js
-  
-  export const reducers = combineReducers({
-    game : GameReducer,
-    socketio : SocketIOReducer
-  });
-  
-  const socketClient = new SocketClient();
 
-  socketClient.on('SendMessage', msg => {console.log(msg)});
-
- function configureStore(initialState, socketClient, apiClient) {
-  //const loggerMiddleware = createLogger();
-   
-
-  return createStore(combineReducers({GameReducer, apiClient}), applyMiddleware(socketMiddleware(socketClient)));
-}
-
-  export const store =  configureStore({}, socketClient, SocketIOReducer);//configureStore();
-  
+  //export const store =  createStore({}, combineReducers({GameReducer}) ,applyMiddleware(SocketClient));//configureStore();
+export const store =  createStore(combineReducers({ChatV2}), applyMiddleware(SocketClient));

@@ -1,0 +1,8 @@
+* subscribe on a room:
+    joinRoom : join a room 
+    sendMsgRoom\
+
+
+--
+cote server:
+    * garder la liste des utilisateurs ayant ouscrit a une room

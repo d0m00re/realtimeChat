@@ -51,8 +51,15 @@ const showRoomUser = (roomName : string) => {
 }
 // utility function :
 // 1 find an user object
-const findUser = (id : string) => global.users.find(user => user.uuid === id);
-
+const findUser = (id : string) => {
+  console.log('id to find : ' + id);
+  console.log(global.users.find(user => user.uuid === id));
+  console.log('-----------');
+  
+  
+  
+  return global.users.find(user => user.uuid === id);
+}
 // 2 : find room object
 const findRoom = (roomname : string) => global.rooms.find(room => room.uuid === roomname);
 
@@ -83,25 +90,31 @@ app.get("/", (req: any, res: any) => {
 // whenever a user connects on port 3000 via
 // a websocket, log that a user has connected
 // create event connection
-io.on("connection", function (socket: any) { 
-  socket.on('sendNickname', function (nickname: string) {
-    console.log('* send nickname : ' + nickname);
+io.on("connection", function (socket: any) {
+  console.log('connexion server');
 
-    socket.nickname = nickname;
-    let user: IUser = { username: nickname, uuid: socket.id, room: '' };
+  console.log(global.users);
+  
+  
+  socket.on('setUsername', function (username: string) {
+    console.log('* send nickname : ' + username);
+
+    socket.nickname = username;
+    let user: IUser = { username: username, uuid: socket.id, room: '' };
     global.users.push(user);
     console.log(global.users);
   })
 
   socket.on("joinRoom", function (roomName: string) {
     console.log('* join a room : ' + roomName);
-    console.log(io.sockets.adapter.rooms.get(roomName));
     let user : IUser | undefined = findUser(socket.id);
     // user need to leave this current room
     if (user === undefined)
+    {
       return 0;
-    // unsubscribe to room and reset user.room
-    if (user.room != '')
+    }
+      // unsubscribe to room and reset user.room
+    if (user.room !== '')
     {
       socket.leave(user.room);
       user.room = '';
@@ -111,35 +124,32 @@ io.on("connection", function (socket: any) {
       socket.join(roomName);
       global.rooms.push({name : roomName, uuid : roomName, msgList : []});
       user.room = roomName;
-    } 
+    }
+
+    user.room = roomName;
+
+    // send all message history
+    socket.emit('recvMultiplesMessages', global.rooms.find(room => room.name === roomName)?.msgList);
   })
 
-  socket.on("sendMsgCurrentRoom", function (payload : any) {
+  socket.on("sendMessage", function (payload : any) {
+    console.log(' go find user omotherfucker : ' + socket.id);    
+    
     let user : IUser | undefined = findUser(socket.id);
 
     if (user === undefined || user.room === '') {
       console.error('user have no room ...');
       return (0);
     }
-    console.log(' go send message to all user who subsbie on a specific room');
-    console.log(payload);
-    console.log(user.room);
+
+    //fiind romm with user.room name
+    let msgList = global.rooms.find(room => room.name === user?.room)?.msgList;
+
+    msgList?.push(payload);
     
-    socket.to(user.room).broadcast.emit('msgFromUser', payload);
+    socket.to(user.room).broadcast.emit('recvMessage', payload);
 
   });
-
-
-  socket.on("message", function (message: any) {
-    console.log(message);
-    socket.broadcast.emit('allMessage', message);
-  });
-
-  socket.on('sendMsg', function (message: any) {
-    console.log('* receive an important message:');
-    console.log(message);
-    socket.broadcast.emit('msgBroadcast', message);
-  })
 
   // rejoindre une room
 });

@@ -1,0 +1,58 @@
+init socket object ninside a reducer;
+
+ChatV2.js
+
+
+// on a set un event d attente 
+
+Protocole
+setUsername // first thing to do 1
+joinRoom // 2
+sendMessage // 3
+recvMessage
+getHistoryMsg
+
+CLIENT EMIT :
+    setNickname
+    joinRoom
+    sendMessage
+    getHistoryMsg
+
+CLIENT RECEIVE :
+    recvMessage () store insidee current message, or generate new dico of msg
+    recvMessageList : (); // recevoir l nhistorique de message depuis le server
+Protocole
+client --> connection ---> setnickname ---> subscribe on a room ---> getHistory --> sendMessage <--- receive message
+
+
+joinRoom -->
+    get message list from the server
+
+Message format :
+    *  {username : username, message, date}
+
+
+----
+CONNECTION : (set username)
+    * join #general room
+    * get message history # general history
+    * get all room
+
+SEND MESSAGE : 
+    * send message
+    * emit new message to all room
+
+CREATE ROOM:
+    * unsubscibe on all room 
+    * create room / join room
+    * send new room to all clients
+    * GET_ALL_ROOM 
+    
+
+    send event :
+        joinRoom
+
+
+
+    GET_ALL_ROOM
+    SEND_ALL_ROOM
