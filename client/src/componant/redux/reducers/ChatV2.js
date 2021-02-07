@@ -1,4 +1,4 @@
-import {ADD_MULTIPLES_MESSAGES, ADD_MESSAGE, SET_USERNAME, SET_ROOMNAME, SET_MESSAGE, SOCKET_SEND_MSG, VALID_USERNAME} from './../constant/ChatV2' //'./../constant/ChatV2';
+import {SET_CURRENT_ROOM, ADD_ROOM, ADD_MULTIPLES_ROOMS, ADD_MULTIPLES_MESSAGES, ADD_MESSAGE, SET_USERNAME, SET_ROOMNAME, SET_MESSAGE, SOCKET_SEND_MSG, VALID_USERNAME} from './../constant/ChatV2' //'./../constant/ChatV2';
 import * as io from 'socket.io-client';
 import {WS_BASE} from './../../../config';
 /*
@@ -13,7 +13,9 @@ const defaultState = () => {
         validUsername : false,
         roomname : '',
         message : '',
-        msgList : [{username : 'jack', message : 'john'}, {username : 'jackouille', message : 'est tu la???'}],
+        msgList : [],
+        roomsList : [],
+        currentRoom : '#general',
         error : false,
     }
 }
@@ -36,6 +38,13 @@ export default function reducer(state = defaultState(), action = {}) {
                 ...state,
                 message : action.payload
             }
+
+        case SET_CURRENT_ROOM:
+            return {
+                ...state,
+                currentRoom : action.payload
+            }
+        
         case VALID_USERNAME:
             return {
                 ...state,
@@ -68,6 +77,22 @@ export default function reducer(state = defaultState(), action = {}) {
             return {
                 ...state,
                 msgList : action.payload
+            }
+
+        case ADD_ROOM:
+            return {
+                ...state,
+                roomsList : [...state.roomsList, action.payload]
+            }
+
+        case ADD_MULTIPLES_ROOMS:
+            console.log('roomlist : ');
+            console.log(action.payload);
+            
+            
+            return {
+                ...state,
+                roomsList : action.payload
             }
         
         

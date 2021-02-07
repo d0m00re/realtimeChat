@@ -5,7 +5,6 @@ import path from "path";
 import cors from 'cors';
 import { v4 as uuidv4 } from 'uuid';
 
-console.log(uuidv4());
 interface IMsg {
   username: string; //uuid
   //date : Date;
@@ -91,11 +90,6 @@ app.get("/", (req: any, res: any) => {
 // a websocket, log that a user has connected
 // create event connection
 io.on("connection", function (socket: any) {
-  console.log('connexion server');
-
-  console.log(global.users);
-  
-  
   socket.on('setUsername', function (username: string) {
     console.log('* send nickname : ' + username);
 
@@ -103,6 +97,11 @@ io.on("connection", function (socket: any) {
     let user: IUser = { username: username, uuid: socket.id, room: '' };
     global.users.push(user);
     console.log(global.users);
+    // emit all room
+    console.log('all room emit : ');
+    
+    io.emit('allRooms', global.rooms.map(room => room.name));
+    //emit all user
   })
 
   socket.on("joinRoom", function (roomName: string) {
@@ -119,17 +118,21 @@ io.on("connection", function (socket: any) {
       socket.leave(user.room);
       user.room = '';
     }
-    // subscribve to a room
-    if (io.sockets.adapter.rooms.get(roomName) === undefined) {
-      socket.join(roomName);
+      
+    if (global.rooms.filter(elem => elem.name === roomName).length === 0){
       global.rooms.push({name : roomName, uuid : roomName, msgList : []});
-      user.room = roomName;
+      io.emit('newRoom', roomName);
     }
-
-    user.room = roomName;
-
+      socket.join(roomName);
+      user.room = roomName;
+      //new room
+    
+    console.log('----========= GENERAL OBJECT ==========-------');
+    
+    console.log(global);
     // send all message history
     socket.emit('recvMultiplesMessages', global.rooms.find(room => room.name === roomName)?.msgList);
+
   })
 
   socket.on("sendMessage", function (payload : any) {
@@ -150,6 +153,14 @@ io.on("connection", function (socket: any) {
     socket.to(user.room).broadcast.emit('recvMessage', payload);
 
   });
+
+  socket.on("getAllRoom", function () {
+    console.log(' get all room : ');
+    console.log(global.rooms.map(room => room.name));
+    
+    
+    socket.emit("getAllRoom", global.rooms.map(room => room.name));
+  })
 
   // rejoindre une room
 });

@@ -5,7 +5,7 @@ import App from './App';
 import { Provider } from 'react-redux';
 import { store } from './componant/redux/redux';
 
-import {ADD_MULTIPLES_MESSAGES, ADD_MESSAGE} from './componant/redux/constant/ChatV2';
+import {ADD_ROOM, ADD_MULTIPLES_ROOMS, ADD_MULTIPLES_MESSAGES, ADD_MESSAGE} from './componant/redux/constant/ChatV2';
 
 const initApiSocket = (store) => {  
   // get socket init by the reducer init state
@@ -26,6 +26,16 @@ const initApiSocket = (store) => {
  //receive all message fron a room
   socket.on('getAllMessage', (listMsg) => {console.log(listMsg);});
   socket.on('getAllRoom', (listRoom) => {console.log(listRoom)});
+
+  socket.on('allRooms', (listRoom) => {
+    dispatch({type : ADD_MULTIPLES_ROOMS, payload : listRoom})
+  });
+
+  socket.on('newRoom', (roomname) => {
+    console.log('New room : ' + roomname);
+    
+    dispatch({type : ADD_ROOM, payload : roomname})
+  })
 }
 
 initApiSocket(store);

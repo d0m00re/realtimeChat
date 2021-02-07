@@ -1,4 +1,4 @@
-import {ADD_MESSAGE, SOCKET_JOIN_ROOM, SET_ROOMNAME, SOCKET_SEND_MESSAGE, SOCKET_SEND_USERNAME, VALID_USERNAME } from './../constant/ChatV2';
+import {ADD_MESSAGE, SOCKET_JOIN_ROOM, SET_ROOMNAME, SOCKET_SEND_MESSAGE, SOCKET_SEND_USERNAME, VALID_USERNAME, SET_CURRENT_ROOM } from './../constant/ChatV2';
 
 const socketIoMiddleware = ({ getState }) => {
     return (next) => (action) => {
@@ -23,12 +23,14 @@ const socketIoMiddleware = ({ getState }) => {
             if (state.roomname === '')
             {                
                 socket.emit('joinRoom', '#general');
-                next({type : SET_ROOMNAME, payload : '#general'});
             }
             else
             {
                 socket.emit('joinRoom', state.roomname);
             }
+            next({type : SET_CURRENT_ROOM, payload : state.roomname});
+            next({type : SET_ROOMNAME, payload : ''});
+
         }
 
         switch (type) {
